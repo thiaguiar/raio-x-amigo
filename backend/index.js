@@ -3,7 +3,7 @@ const express = require('express');
 const { Pool } = require('pg');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 // Middleware
 app.use(express.json());
@@ -70,6 +70,6 @@ app.get('/lead/:email', async (req, res) => {
 });
 
 // Start server
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });
