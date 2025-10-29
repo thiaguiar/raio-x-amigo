@@ -5,6 +5,8 @@ const { Pool } = require('pg');
 const app = express();
 const port = process.env.PORT;
 
+console.log("Valor da variável PORT:", port);
+
 // Middleware
 app.use(express.json());
 
