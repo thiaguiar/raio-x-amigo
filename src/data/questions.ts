@@ -87,11 +87,7 @@ export interface ProfileResult {
   title: string;
   diagnosis: string;
   score: string;
-  opportunity: string;
-  productName: string;
-  productBenefits: string[];
-  originalPrice: string;
-  currentPrice: string;
+  nextSteps: string[];
 }
 
 export function calculateProfile(responses: Record<string, string>): ProfileResult {
@@ -108,18 +104,12 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
       name: "navegante",
       emoji: "⛵",
       title: "Navegante Confiante",
-      diagnosis: "Parabéns! Você já está no caminho certo e demonstra uma ótima gestão financeira. Sua organização é inspiradora, e agora é hora de fazer seu dinheiro trabalhar ainda mais para você!",
+      diagnosis: "Parabéns! Você está no comando do seu barco e navegando em águas tranquilas. Sua consciência financeira é sua maior aliada. O desafio agora é transformar essa estabilidade em crescimento para alcançar seus objetivos mais ousados.",
       score: `${totalScore}/29 (Zona Verde)`,
-      opportunity: "Potencializar seus investimentos e acelerar a conquista dos seus sonhos financeiros.",
-      productName: "Guia Completo de Investimentos Inteligentes",
-      productBenefits: [
-        "Estratégias para multiplicar seu patrimônio",
-        "Como escolher os melhores investimentos",
-        "Planejamento para realização de sonhos",
-        "Planilha de acompanhamento de investimentos",
+      nextSteps: [
+        "Automatize Seus Investimentos: Configure uma transferência automática para sua corretora no mesmo dia que seu salário cair. Assim, você investe sem nem perceber.",
+        "Diversifique um Degrau: Pesquise UM novo tipo de investimento (ex: Tesouro IPCA, FIIs) para dar o próximo passo na sua jornada de investidor."
       ],
-      originalPrice: "R$ 147,00",
-      currentPrice: "R$ 67,00",
     };
   } else if (totalScore <= 14) {
     return {
@@ -128,16 +118,10 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
       title: "Sonhador Organizado",
       diagnosis: "Você tem consciência financeira e está dando passos importantes! Com um pouco mais de estrutura e organização, você pode transformar completamente sua relação com o dinheiro.",
       score: `${totalScore}/29 (Zona Amarela-Verde)`,
-      opportunity: "Implementar um sistema de organização financeira que funcione no piloto automático.",
-      productName: "Sistema de Organização Financeira Pessoal",
-      productBenefits: [
-        "Método completo de organização financeira",
-        "Planilha automatizada de controle",
-        "Guia para criar reserva de emergência",
-        "Acesso a comunidade de apoio",
+      nextSteps: [
+        "Crie um \"Pote dos Sonhos\": Separe uma quantia simbólica (mesmo que R$ 50) todo mês em uma conta/carteira separada, dedicada EXCLUSIVAMENTE ao seu objetivo principal.",
+        "Revise Assinaturas: Cancele pelo menos UMA assinatura ou serviço recorrente que você não usa tanto assim. Redirecione esse valor para o seu \"Pote dos Sonhos\"."
       ],
-      originalPrice: "R$ 97,00",
-      currentPrice: "R$ 47,00",
     };
   } else if (totalScore <= 19) {
     return {
@@ -146,34 +130,22 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
       title: "Buscador de Alívio",
       diagnosis: "Você está fazendo o melhor que pode com o que tem. Reconhecer que precisa de ajuda já é um passo gigante! Com as estratégias certas, você pode recuperar o controle e ter mais tranquilidade.",
       score: `${totalScore}/29 (Zona Amarela)`,
-      opportunity: "Aprender técnicas práticas para reduzir gastos e aumentar sua margem de segurança financeira.",
-      productName: "Desafio 30 Dias de Transformação Financeira",
-      productBenefits: [
-        "Ações diárias práticas e simples",
-        "Estratégias para cortar gastos sem sofrer",
-        "Como criar uma reserva emergencial rápido",
-        "Grupo de apoio e motivação diária",
+      nextSteps: [
+        "Respire e Anote: Por uma semana, apenas ANOTE todos os seus gastos, sem julgamento. O simples ato de registrar tira o peso da mente e traz clareza.",
+        "A Regra do \"1 Não\": Comprometa-se a recusar UM gasto impulsivo por semana (aquele cafezinho, a compra por impulso). Celebre essa pequena vitória."
       ],
-      originalPrice: "R$ 67,00",
-      currentPrice: "R$ 27,00",
     };
   } else {
     return {
       name: "explorador",
       emoji: "💪",
       title: "Explorador Determinado",
-      diagnosis: "Você está passando por um terreno acidentado, mas sua determinação em sair das dívidas é clara e inspiradora! Reconhecer que precisa de uma mudança é o primeiro e mais corajoso passo.",
+      diagnosis: "Você está passando por um terreno acidentado, mas sua determinação em sair das dívidas é clara e inspiradora! Reconhecer que precisa de uma mudança é o primeiro e mais corajoso passo. A boa notícia é que existe um caminho claro para sair dessa situação.",
       score: `${totalScore}/29 (Alerta Vermelho)`,
-      opportunity: "Implementar um método comprovado para eliminar as dívidas de uma vez por todas e recuperar sua paz.",
-      productName: "Método AntiDívida - Guia Prático",
-      productBenefits: [
-        "Plano passo a passo para quitar suas dívidas",
-        "Estratégias para negociar com bancos",
-        "Planilha de controle exclusiva",
-        "Acesso a comunidade de suporte",
+      nextSteps: [
+        "Faça um Raio-X das Dívidas: Liste TODAS as suas dívidas, com valor, taxa de juros e credor. Só enxergando o monstro de frente você pode combatê-lo.",
+        "Pare o Sangramento Imediato: Identifique UM gasto recorrente não essencial que pode ser cortado ou reduzido para liberar dinheiro para abater as dívidas mais caras."
       ],
-      originalPrice: "R$ 97,00",
-      currentPrice: "R$ 47,00",
     };
   }
 }

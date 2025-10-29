@@ -3,11 +3,10 @@ import WelcomeScreen from "@/components/WelcomeScreen";
 import DataCaptureScreen from "@/components/DataCaptureScreen";
 import QuestionScreen from "@/components/QuestionScreen";
 import ResultScreen from "@/components/ResultScreen";
-import ConfirmationScreen from "@/components/ConfirmationScreen";
 import { questions, calculateProfile, ProfileResult } from "@/data/questions";
 import { toast } from "sonner";
 
-type Screen = "welcome" | "data-capture" | "questions" | "result" | "confirmation";
+type Screen = "welcome" | "data-capture" | "questions" | "result";
 
 interface UserData {
   name: string;
@@ -89,25 +88,10 @@ const Index = () => {
     }
   };
 
-  const handleDownload = () => {
-    setCurrentScreen("confirmation");
-    toast.success("Relatório enviado! Verifique seu email.");
-  };
-
   const handlePurchase = () => {
     toast.success("Redirecionando para a página de compra...");
     // In production, redirect to payment page
     window.open("https://exemplo.com/checkout", "_blank");
-  };
-
-  const handleClose = () => {
-    // Reset everything
-    localStorage.removeItem("financial-diagnosis");
-    setCurrentScreen("welcome");
-    setUserData(null);
-    setCurrentQuestionIndex(0);
-    setResponses({});
-    setProfile(null);
   };
 
   if (currentScreen === "welcome") {
@@ -145,17 +129,7 @@ const Index = () => {
       <ResultScreen
         profile={profile}
         userName={userData.name}
-        onDownload={handleDownload}
         onPurchase={handlePurchase}
-      />
-    );
-  }
-
-  if (currentScreen === "confirmation" && userData) {
-    return (
-      <ConfirmationScreen
-        email={userData.email}
-        onClose={handleClose}
       />
     );
   }
