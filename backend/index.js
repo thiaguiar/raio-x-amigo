@@ -71,6 +71,11 @@ app.get('/lead/:email', async (req, res) => {
   }
 });
 
+// GET /
+app.get('/', (req, res) => {
+  res.send('API funcionando!');
+});
+
 // Start server
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
