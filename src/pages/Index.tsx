@@ -1,14 +1,166 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from "react";
+import WelcomeScreen from "@/components/WelcomeScreen";
+import DataCaptureScreen from "@/components/DataCaptureScreen";
+import QuestionScreen from "@/components/QuestionScreen";
+import ResultScreen from "@/components/ResultScreen";
+import ConfirmationScreen from "@/components/ConfirmationScreen";
+import { questions, calculateProfile, ProfileResult } from "@/data/questions";
+import { toast } from "sonner";
+
+type Screen = "welcome" | "data-capture" | "questions" | "result" | "confirmation";
+
+interface UserData {
+  name: string;
+  email: string;
+  income: string;
+}
 
 const Index = () => {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
-  );
+  const [currentScreen, setCurrentScreen] = useState<Screen>("welcome");
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [responses, setResponses] = useState<Record<string, string>>({});
+  const [profile, setProfile] = useState<ProfileResult | null>(null);
+
+  // Load saved progress from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("financial-diagnosis");
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.userData) setUserData(data.userData);
+        if (data.responses) setResponses(data.responses);
+        if (data.currentQuestionIndex) setCurrentQuestionIndex(data.currentQuestionIndex);
+        if (data.currentScreen) setCurrentScreen(data.currentScreen);
+      } catch (e) {
+        console.error("Error loading saved data:", e);
+      }
+    }
+  }, []);
+
+  // Save progress to localStorage
+  useEffect(() => {
+    if (userData || Object.keys(responses).length > 0) {
+      localStorage.setItem(
+        "financial-diagnosis",
+        JSON.stringify({
+          userData,
+          responses,
+          currentQuestionIndex,
+          currentScreen,
+        })
+      );
+    }
+  }, [userData, responses, currentQuestionIndex, currentScreen]);
+
+  const handleStart = () => {
+    setCurrentScreen("data-capture");
+  };
+
+  const handleDataCapture = (data: UserData) => {
+    setUserData(data);
+    setCurrentScreen("questions");
+    toast.success("Perfeito! Vamos às perguntas.");
+  };
+
+  const handleQuestionSelect = (value: string) => {
+    const currentQuestion = questions[currentQuestionIndex];
+    setResponses((prev) => ({
+      ...prev,
+      [currentQuestion.id]: value,
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex === questions.length - 1) {
+      // Last question - calculate result
+      const result = calculateProfile(responses);
+      setProfile(result);
+      setCurrentScreen("result");
+      toast.success("Analisando suas respostas...");
+    } else {
+      setCurrentQuestionIndex((prev) => prev + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex((prev) => prev - 1);
+    }
+  };
+
+  const handleDownload = () => {
+    setCurrentScreen("confirmation");
+    toast.success("Relatório enviado! Verifique seu email.");
+  };
+
+  const handlePurchase = () => {
+    toast.success("Redirecionando para a página de compra...");
+    // In production, redirect to payment page
+    window.open("https://exemplo.com/checkout", "_blank");
+  };
+
+  const handleClose = () => {
+    // Reset everything
+    localStorage.removeItem("financial-diagnosis");
+    setCurrentScreen("welcome");
+    setUserData(null);
+    setCurrentQuestionIndex(0);
+    setResponses({});
+    setProfile(null);
+  };
+
+  if (currentScreen === "welcome") {
+    return <WelcomeScreen onStart={handleStart} />;
+  }
+
+  if (currentScreen === "data-capture") {
+    return (
+      <DataCaptureScreen
+        onNext={handleDataCapture}
+        initialData={userData || undefined}
+      />
+    );
+  }
+
+  if (currentScreen === "questions") {
+    const currentQuestion = questions[currentQuestionIndex];
+    return (
+      <QuestionScreen
+        questionNumber={currentQuestionIndex + 1}
+        totalQuestions={questions.length}
+        question={currentQuestion.question}
+        options={currentQuestion.options}
+        selectedValue={responses[currentQuestion.id]}
+        onSelect={handleQuestionSelect}
+        onNext={handleNext}
+        onBack={handleBack}
+        canGoBack={currentQuestionIndex > 0}
+      />
+    );
+  }
+
+  if (currentScreen === "result" && profile && userData) {
+    return (
+      <ResultScreen
+        profile={profile}
+        userName={userData.name}
+        onDownload={handleDownload}
+        onPurchase={handlePurchase}
+      />
+    );
+  }
+
+  if (currentScreen === "confirmation" && userData) {
+    return (
+      <ConfirmationScreen
+        email={userData.email}
+        onClose={handleClose}
+      />
+    );
+  }
+
+  return null;
 };
 
 export default Index;
