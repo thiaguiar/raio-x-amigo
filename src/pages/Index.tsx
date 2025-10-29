@@ -94,6 +94,39 @@ const Index = () => {
     window.open("https://exemplo.com/checkout", "_blank");
   };
 
+  const handleSubmitQuiz = async () => {
+    if (!userData || !profile) {
+      console.error("Dados do usuário ou perfil ausentes.");
+      return;
+    }
+
+    const payload = {
+      name: userData.name,
+      email: userData.email,
+      income: userData.income,
+      respostas: responses,
+      perfil: profile,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/quiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao enviar os dados para o backend.");
+      }
+
+      console.log("Dados enviados com sucesso para o backend.");
+    } catch (error) {
+      console.error("Erro ao enviar os dados:", error);
+    }
+  };
+
   if (currentScreen === "welcome") {
     return <WelcomeScreen onStart={handleStart} />;
   }
@@ -125,6 +158,7 @@ const Index = () => {
   }
 
   if (currentScreen === "result" && profile && userData) {
+    handleSubmitQuiz(); // Envia os dados ao backend ao exibir a tela de resultado
     return (
       <ResultScreen
         profile={profile}

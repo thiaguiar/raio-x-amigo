@@ -1,0 +1,10 @@
+CREATE TABLE leads (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  income TEXT NOT NULL,
+  respostas JSON NOT NULL,
+  perfil JSON NOT NULL,
+  comprou BOOLEAN DEFAULT FALSE,
+  criado_em TIMESTAMP DEFAULT NOW()
+);
