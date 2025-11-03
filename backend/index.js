@@ -20,7 +20,7 @@ app.post('/quiz', async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO leads (name, email, income, respostas, perfil, comprou) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [name, email, income, respostas, perfil, false]
+      [ name, email, income, JSON.stringify(respostas), JSON.stringify(perfil), false ]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
