@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT;
@@ -9,6 +10,9 @@ console.log("Valor da variável PORT:", port);
 
 // Middleware
 app.use(express.json());
+app.use(cors({
+  origin: 'https://raio-x.alemdodinheiro.net' // Seu domínio da Hostinger
+}));
 
 // PostgreSQL Pool
 const pool = new Pool({
