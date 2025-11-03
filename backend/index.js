@@ -11,7 +11,12 @@ console.log("Valor da variável PORT:", port);
 app.use(express.json());
 
 // PostgreSQL Pool
-const pool = new Pool();
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 // POST /quiz
 app.post('/quiz', async (req, res) => {
