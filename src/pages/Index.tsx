@@ -109,7 +109,7 @@ const Index = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/quiz", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/quiz`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -21,6 +21,16 @@ const ResultScreen = ({ profile, userName, onPurchase }: ResultScreenProps) => {
           <p className="text-xl text-muted-foreground">Olá, {userName}!</p>
         </div>
 
+        <div className="absolute top-4 left-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.location.reload()}
+          >
+            Reiniciar
+          </Button>
+        </div>
+
         {/* SEÇÃO 1: SEU DIAGNÓSTICO */}
         <div className="bg-card rounded-2xl shadow-lg p-8 border border-border mb-8">
           <h2 className="text-3xl font-bold text-primary mb-6">
