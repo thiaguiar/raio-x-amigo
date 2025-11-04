@@ -27,7 +27,10 @@ const ResultScreen = ({ profile, userName }: ResultScreenProps) => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              localStorage.clear();
+              window.location.href = '/';
+            }}
           >
             Reiniciar
           </Button>
