@@ -11,7 +11,6 @@ type Screen = "welcome" | "data-capture" | "questions" | "result";
 interface UserData {
   name: string;
   email: string;
-  income: string;
 }
 
 const Index = () => {
@@ -70,14 +69,33 @@ const Index = () => {
     }));
   };
 
+  const getMotivationalMessage = (questionIndex: number): string => {
+    const messages = [
+      "Ótimo começo! 🎯 Estamos quase lá...",
+      "Muito bem! 💪 Continue assim...",
+      "Perfeito! 🌟 Você está se conhecendo melhor...",
+      "Excelente! 🚀 Já estamos na metade...",
+      "Ótima resposta! 🎉 Falta pouco...",
+      "Quase lá! 💫 Mais algumas perguntas...",
+      "Última pergunta! 🏁 Seu diagnóstico está quase pronto..."
+    ];
+    return messages[questionIndex] || "Continuando...";
+  };
+
   const handleNext = () => {
     if (currentQuestionIndex === questions.length - 1) {
       // Last question - calculate result
       const result = calculateProfile(responses);
       setProfile(result);
       setCurrentScreen("result");
-      toast.success("Analisando suas respostas...");
+      toast.success("🎉 Analisando suas respostas...", {
+        description: "Preparando seu diagnóstico personalizado!"
+      });
     } else {
+      // Show motivational message
+      toast.success(getMotivationalMessage(currentQuestionIndex), {
+        duration: 2000,
+      });
       setCurrentQuestionIndex((prev) => prev + 1);
     }
   };
@@ -100,10 +118,18 @@ const Index = () => {
       return;
     }
 
+    // Mapeia a resposta de renda para o formato esperado pelo backend
+    const incomeMap: Record<string, string> = {
+      a: "Até R$ 2.000",
+      b: "R$ 2.000 - R$ 5.000",
+      c: "R$ 5.000 - R$ 10.000",
+      d: "Acima de R$ 10.000",
+    };
+
     const payload = {
       name: userData.name,
       email: userData.email,
-      income: userData.income,
+      income: incomeMap[responses.income] || "Não informado",
       respostas: responses,
       perfil: profile,
     };

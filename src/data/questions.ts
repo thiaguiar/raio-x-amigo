@@ -70,6 +70,16 @@ export const questions: Question[] = [
       { value: "d", emoji: "📊", label: "Entender melhor como o dinheiro funciona." },
     ],
   },
+  {
+    id: "income",
+    question: "Qual é a sua faixa de renda mensal?",
+    options: [
+      { value: "a", emoji: "💵", label: "Até R$ 2.000" },
+      { value: "b", emoji: "💰", label: "R$ 2.000 - R$ 5.000" },
+      { value: "c", emoji: "💳", label: "R$ 5.000 - R$ 10.000" },
+      { value: "d", emoji: "💎", label: "Acima de R$ 10.000" },
+    ],
+  },
 ];
 
 export const scoreMatrix: Record<string, Record<string, number>> = {
@@ -79,6 +89,7 @@ export const scoreMatrix: Record<string, Record<string, number>> = {
   q4: { a: 1, b: 2, c: 3, d: 4 },
   q5: { a: 1, b: 2, c: 3, d: 4 },
   q6: { a: 1, b: 2, c: 3, d: 4 },
+  // income não conta para pontuação, é apenas coleta de dados
 };
 
 export interface ProfileResult {
