@@ -163,7 +163,6 @@ const Index = () => {
       <ResultScreen
         profile={profile}
         userName={userData.name}
-        onPurchase={handlePurchase}
       />
     );
   }
