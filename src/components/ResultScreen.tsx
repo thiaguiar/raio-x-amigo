@@ -41,7 +41,7 @@ const ResultScreen = ({ profile, userName }: ResultScreenProps) => {
           <h2 className="text-3xl font-bold text-primary mb-6">
             Perfil: {profile.title}
           </h2>
-          
+
           <div className="space-y-6">
             <div>
               <p className="text-muted-foreground leading-relaxed text-lg">
@@ -61,7 +61,7 @@ const ResultScreen = ({ profile, userName }: ResultScreenProps) => {
           <h2 className="text-2xl font-bold text-foreground mb-6">
             💡 Próximos Passos Recomendados
           </h2>
-          
+
           <div className="space-y-4">
             {profile.nextSteps.map((step, index) => (
               <div key={index} className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg">
@@ -80,23 +80,53 @@ const ResultScreen = ({ profile, userName }: ResultScreenProps) => {
               Continue sua jornada financeira!
             </h2>
           </div>
-          
+
           <div className="space-y-4 text-center">
             <p className="text-lg leading-relaxed">
-              Você deu o primeiro passo importante ao fazer este diagnóstico. 
+              Você deu o primeiro passo importante ao fazer este diagnóstico.
               Agora é hora de colocar em prática os próximos passos recomendados.
             </p>
-            
-            <div className="bg-white/10 rounded-lg p-6 mt-6">
-              <Lightbulb className="h-12 w-12 mx-auto mb-4" />
-              <p className="text-base italic">
-                "A educação financeira é a chave para transformar sua relação com o dinheiro 
-                e construir um futuro mais próspero e tranquilo."
-              </p>
-            </div>
 
-            <div className="mt-6 pt-6 border-t border-white/20">
-              <p className="text-sm opacity-90">
+            {/* CTA INTEGRADO */}
+            <div className="mt-8 pt-6 border-t border-white/20">
+              <div className="bg-white/10 rounded-xl p-6 mb-6">
+                <h3 className="text-2xl font-bold mb-4 text-yellow-300">
+                  ✅ Diagnóstico Concluído.
+                </h3>
+                <div className="space-y-4 mb-6">
+                  <p className="text-base opacity-95 leading-relaxed">
+                    Para te ajudar a resolver isso, eu poderia te oferecer minha mentoria individual. Mas eu quero que você comece <strong>AGORA</strong>.
+                  </p>
+                  <p className="text-base opacity-95 leading-relaxed">
+                    Em prol do nosso <strong>Movimento de Consistência</strong>, liberei o Kit de Ferramentas (que meus alunos pagaram R$ 67) por um valor simbólico de <strong className="text-green-300">R$ 7,00</strong>.
+                  </p>
+                  <p className="text-base opacity-95 italic">
+                    Não é pelo dinheiro. É pelo seu compromisso.
+                  </p>
+                </div>
+                <div className="text-center">
+                  <Button
+                    size="lg"
+                    className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-lg px-8 py-4 rounded-xl shadow-lg transform transition-all hover:scale-105 mb-3 w-full md:w-auto"
+                    onClick={() => window.open('https://pay.kiwify.com.br/GSect5C', '_blank')}
+                  >
+                    📥 BAIXAR O KIT E APOIAR O MOVIMENTO
+                  </Button>
+                  <p className="text-xs opacity-75">
+                    ✅ Acesso imediato • 🔒 100% seguro
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-white/10 rounded-lg p-6 mt-6">
+                <Lightbulb className="h-12 w-12 mx-auto mb-4" />
+                <p className="text-base italic">
+                  "A educação financeira é a chave para transformar sua relação com o dinheiro
+                  e construir um futuro mais próspero e tranquilo."
+                </p>
+              </div>
+
+              <p className="text-sm opacity-90 mt-6">
                 Suas respostas foram salvas e nos ajudarão a criar conteúdos mais relevantes para você.
               </p>
             </div>
