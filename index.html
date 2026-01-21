@@ -1,30 +1,55 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Cache Control - Force fresh content -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    
-    <title>Raio-X Financeiro - Diagnóstico Inteligente</title>
-    <meta name="description" content="Descubra sua saúde financeira em 5 minutos com nosso diagnóstico personalizado gratuito. Receba um Raio-X completo das suas finanças e soluções sob medida." />
-    <meta name="author" content="Raio-X Financeiro" />
 
-    <meta property="og:title" content="Raio-X Financeiro - Diagnóstico Inteligente" />
-    <meta property="og:description" content="Diagnóstico financeiro gratuito em 5 minutos. Descubra seu perfil e receba soluções personalizadas para suas finanças." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+  <!-- Cache Control - Force fresh content -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <title>Raio-X Financeiro - Diagnóstico Inteligente</title>
+  <meta name="description"
+    content="Descubra sua saúde financeira em 5 minutos com nosso diagnóstico personalizado gratuito. Receba um Raio-X completo das suas finanças e soluções sob medida." />
+  <meta name="author" content="Raio-X Financeiro" />
+
+  <meta property="og:title" content="Raio-X Financeiro - Diagnóstico Inteligente" />
+  <meta property="og:description"
+    content="Diagnóstico financeiro gratuito em 5 minutos. Descubra seu perfil e receba soluções personalizadas para suas finanças." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@lovable_dev" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <!-- Redirecionar WebView do Instagram/Facebook para navegador externo -->
+  <script>
+    (function () {
+      const ua = navigator.userAgent || navigator.vendor || window.opera;
+      const isInApp = /Instagram|FBAN|FBAV|FB_IAB|GSA/i.test(ua);
+
+      if (isInApp) {
+        const currentUrl = window.location.href;
+        if (currentUrl.includes('instagram')) {
+          // Para Instagram
+          window.location = 'intent://raio-x.alemdodinheiro.net#Intent;scheme=https;package=com.android.chrome;end';
+        } else {
+          // Fallback - aviso ao usuário
+          const div = document.createElement('div');
+          div.innerHTML = '<div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999;"><div style="background: white; padding: 20px; border-radius: 10px; text-align: center;"><p style="margin: 0 0 10px 0; font-size: 16px; font-weight: bold;">Para melhor experiência</p><p style="margin: 0 0 20px 0; font-size: 14px;">Toque no botão abaixo para abrir no seu navegador</p><a href="' + currentUrl + '" style="display: inline-block; background: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold;">Abrir Navegador</a></div></div>';
+          document.body.appendChild(div);
+        }
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
