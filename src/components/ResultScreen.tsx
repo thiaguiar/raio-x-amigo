@@ -98,19 +98,19 @@ const ResultScreen = ({ profile, userName }: ResultScreenProps) => {
                     Para te ajudar a resolver isso, eu poderia te oferecer minha mentoria individual. Mas eu quero que você comece <strong>AGORA</strong>.
                   </p>
                   <p className="text-base opacity-95 leading-relaxed">
-                    Em prol do nosso <strong>Movimento de Consistência</strong>, liberei o Kit de Ferramentas (que meus alunos pagaram R$ 67) por um valor simbólico de <strong className="text-green-300">R$ 7,00</strong>.
+                    Em prol do nosso <strong>Movimento de Consistência Financeira</strong>, liberei o Kit Protocolo (que meus alunos pagaram R$ 299,00) por <strong className="text-green-300">R$ 29,90</strong>.
                   </p>
                   <p className="text-base opacity-95 italic">
-                    Não é pelo dinheiro. É pelo seu compromisso.
+                    ⏰ <strong>Oferta relâmpago: 90% de desconto por tempo limitado!</strong> Não perca essa oportunidade.
                   </p>
                 </div>
                 <div className="text-center">
                   <Button
                     size="lg"
                     className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-lg px-8 py-4 rounded-xl shadow-lg transform transition-all hover:scale-105 mb-3 w-full md:w-auto"
-                    onClick={() => window.open('https://pay.kiwify.com.br/GSect5C', '_blank')}
+                    onClick={() => window.open('https://pay.kiwify.com.br/GSect5C?coupon=SOHOJE90', '_blank')}
                   >
-                    📥 BAIXAR O KIT E APOIAR O MOVIMENTO
+                    📥 APROVEITAR DESCONTO EXCLUSIVO AGORA
                   </Button>
                   <p className="text-xs opacity-75">
                     ✅ Acesso imediato • 🔒 100% seguro
