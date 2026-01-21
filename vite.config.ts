@@ -15,5 +15,5 @@ export default defineConfig(({ mode }: { mode: string }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "/raio-x/", // Base path para produção
+  base: "/", // Base path para produção
 }));
