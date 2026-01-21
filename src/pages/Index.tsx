@@ -26,10 +26,14 @@ const Index = () => {
     if (saved) {
       try {
         const data = JSON.parse(saved);
+        // Se o quiz foi completado, não restaura o estado (deixa voltar ao welcome)
+        if (data.isCompleted) {
+          return;
+        }
         if (data.userData) setUserData(data.userData);
         if (data.responses) setResponses(data.responses);
         if (data.currentQuestionIndex) setCurrentQuestionIndex(data.currentQuestionIndex);
-        if (data.currentScreen) setCurrentScreen(data.currentScreen);
+        if (data.currentScreen && data.currentScreen !== "result") setCurrentScreen(data.currentScreen);
       } catch (e) {
         console.error("Error loading saved data:", e);
       }
@@ -46,13 +50,19 @@ const Index = () => {
           responses,
           currentQuestionIndex,
           currentScreen,
+          isCompleted: currentScreen === "result",
         })
       );
     }
   }, [userData, responses, currentQuestionIndex, currentScreen]);
 
   const handleStart = () => {
+    // Reset all state when starting a new quiz
     setCurrentScreen("data-capture");
+    setUserData(null);
+    setCurrentQuestionIndex(0);
+    setResponses({});
+    setProfile(null);
   };
 
   const handleDataCapture = (data: UserData) => {
@@ -110,6 +120,16 @@ const Index = () => {
     toast.success("Redirecionando para a página de compra...");
     // In production, redirect to payment page
     window.open("https://exemplo.com/checkout", "_blank");
+  };
+
+  const handleRestart = () => {
+    // Clear localStorage and reset all state
+    localStorage.removeItem("financial-diagnosis");
+    setCurrentScreen("welcome");
+    setUserData(null);
+    setCurrentQuestionIndex(0);
+    setResponses({});
+    setProfile(null);
   };
 
   const handleSubmitQuiz = async () => {
@@ -189,6 +209,7 @@ const Index = () => {
       <ResultScreen
         profile={profile}
         userName={userData.name}
+        onRestart={handleRestart}
       />
     );
   }

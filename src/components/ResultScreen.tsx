@@ -5,9 +5,10 @@ import { CheckCircle2, Lightbulb, TrendingUp } from "lucide-react";
 interface ResultScreenProps {
   profile: ProfileResult;
   userName: string;
+  onRestart?: () => void;
 }
 
-const ResultScreen = ({ profile, userName }: ResultScreenProps) => {
+const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
   return (
     <div className="min-h-screen bg-background p-4 py-12">
       <div className="max-w-4xl mx-auto animate-fade-in">
@@ -27,10 +28,10 @@ const ResultScreen = ({ profile, userName }: ResultScreenProps) => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              localStorage.clear();
+            onClick={onRestart || (() => {
+              localStorage.removeItem("financial-diagnosis");
               window.location.href = '/';
-            }}
+            })}
           >
             Reiniciar
           </Button>
