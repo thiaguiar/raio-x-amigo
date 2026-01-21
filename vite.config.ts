@@ -15,5 +15,9 @@ export default defineConfig(({ mode }: { mode: string }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "/raio-x/",
+  base: "/",
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+  },
 }));
