@@ -92,30 +92,38 @@ const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
             <div className="mt-8 pt-6 border-t border-white/20">
               <div className="bg-white/10 rounded-xl p-6 mb-6">
                 <h3 className="text-2xl font-bold mb-4 text-yellow-300">
-                  ✅ Diagnóstico Concluído.
+                  Sua clareza começa agora.
                 </h3>
                 <div className="space-y-4 mb-6">
                   <p className="text-base opacity-95 leading-relaxed">
-                    Para te ajudar a resolver isso, eu poderia te oferecer minha mentoria individual. Mas eu quero que você comece <strong>AGORA</strong>.
+                    Você deu um passo importante ao concluir este diagnóstico.
                   </p>
                   <p className="text-base opacity-95 leading-relaxed">
-                    Em prol do nosso <strong>Movimento de Consistência Financeira</strong>, liberei o Kit Protocolo (que meus alunos pagaram R$ 299,00) por <strong className="text-green-300">R$ 29,90</strong>.
+                    Mas clareza sem direção vira intenção esquecida.
                   </p>
-                  <p className="text-base opacity-95 italic">
-                    ⏰ <strong>Oferta relâmpago: 90% de desconto por tempo limitado!</strong> Não perca essa oportunidade.
+                  <p className="text-base opacity-95 leading-relaxed">
+                    Se você quer organizar sua vida financeira com método, consciência e estrutura, o próximo passo é simples:
+                  </p>
+                  <p className="text-base opacity-95 leading-relaxed">
+                    👉 Entrar para a lista da <strong>Mentoria Bússola Financeira</strong>.
+                  </p>
+                  <p className="text-base opacity-95 leading-relaxed">
+                    Lá, eu acompanho pessoalmente famílias que querem sair do caos financeiro e construir prosperidade com consciência.
+                  </p>
+                  <p className="text-base opacity-95 leading-relaxed">
+                    Sem promessas fáceis.<br />
+                    Sem atalhos.<br />
+                    Com direção.
                   </p>
                 </div>
                 <div className="text-center">
                   <Button
                     size="lg"
                     className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-lg px-8 py-4 rounded-xl shadow-lg transform transition-all hover:scale-105 mb-3 w-full md:w-auto"
-                    onClick={() => window.open('https://pay.kiwify.com.br/GSect5C?coupon=SOHOJE90', '_blank')}
+                    onClick={() => window.open('https://forms.gle/PZ5hNUQPTcfKN1JN6', '_blank')}
                   >
-                    📥 APROVEITAR DESCONTO EXCLUSIVO AGORA
+                    Quero ser avisado sobre a próxima turma
                   </Button>
-                  <p className="text-xs opacity-75">
-                    ✅ Acesso imediato • 🔒 100% seguro
-                  </p>
                 </div>
               </div>
 
