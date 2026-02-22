@@ -9,6 +9,29 @@ interface ResultScreenProps {
 }
 
 const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
+  const handleProfileCta = () => {
+    if (profile.cta.openInNewTab) {
+      window.open(profile.cta.href, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    window.location.href = profile.cta.href;
+  };
+
+  const personalizedCtaTitle = `${userName}, ${profile.ctaMessage.title.charAt(0).toLowerCase()}${profile.ctaMessage.title.slice(1)}`;
+  const personalizedCtaParagraphs = profile.ctaMessage.paragraphs.map((paragraph, index, arr) => {
+    const isLastParagraph = index === arr.length - 1;
+    if (!isLastParagraph) {
+      return paragraph;
+    }
+
+    if (paragraph.startsWith("Aqui ")) {
+      return `Aqui ${userName}, ${paragraph.slice(5)}`;
+    }
+
+    return paragraph;
+  });
+
   return (
     <div className="min-h-screen bg-background p-4 py-12">
       <div className="max-w-4xl mx-auto animate-fade-in">
@@ -92,37 +115,22 @@ const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
             <div className="mt-8 pt-6 border-t border-white/20">
               <div className="bg-white/10 rounded-xl p-6 mb-6">
                 <h3 className="text-2xl font-bold mb-4 text-yellow-300">
-                  Sua clareza começa agora.
+                  {personalizedCtaTitle}
                 </h3>
                 <div className="space-y-4 mb-6">
-                  <p className="text-base opacity-95 leading-relaxed">
-                    Você deu um passo importante ao concluir este diagnóstico.
-                  </p>
-                  <p className="text-base opacity-95 leading-relaxed">
-                    Mas clareza sem direção vira intenção esquecida.
-                  </p>
-                  <p className="text-base opacity-95 leading-relaxed">
-                    Se você quer organizar sua vida financeira com método, consciência e estrutura, o próximo passo é simples:
-                  </p>
-                  <p className="text-base opacity-95 leading-relaxed">
-                    👉 Entrar para a lista da <strong>Mentoria Bússola Financeira</strong>.
-                  </p>
-                  <p className="text-base opacity-95 leading-relaxed">
-                    Lá, eu acompanho pessoalmente famílias que querem sair do caos financeiro e construir prosperidade com consciência.
-                  </p>
-                  <p className="text-base opacity-95 leading-relaxed">
-                    Sem promessas fáceis.<br />
-                    Sem atalhos.<br />
-                    Com direção.
-                  </p>
+                  {personalizedCtaParagraphs.map((paragraph, index) => (
+                    <p key={index} className="text-base opacity-95 leading-relaxed">
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
                 <div className="text-center">
                   <Button
                     size="lg"
                     className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold text-lg px-8 py-4 rounded-xl shadow-lg transform transition-all hover:scale-105 mb-3 w-full md:w-auto"
-                    onClick={() => window.open('https://forms.gle/PZ5hNUQPTcfKN1JN6', '_blank')}
+                    onClick={handleProfileCta}
                   >
-                    Quero ser avisado sobre a próxima turma
+                    {profile.cta.label}
                   </Button>
                 </div>
               </div>

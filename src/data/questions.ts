@@ -99,11 +99,142 @@ export interface ProfileResult {
   diagnosis: string;
   score: string;
   nextSteps: string[];
+  cta: {
+    label: string;
+    href: string;
+    openInNewTab?: boolean;
+  };
+  ctaMessage: {
+    title: string;
+    paragraphs: string[];
+  };
+}
+
+type OfferType = "lowticket" | "gravado" | "mentoria";
+type CtaMessage = {
+  title: string;
+  paragraphs: string[];
+};
+
+function resolveOffer(profileName: string, incomeAnswer?: string): OfferType {
+  const isUpTo2k = incomeAnswer === "a";
+  const isUpTo5k = incomeAnswer === "a" || incomeAnswer === "b";
+
+  if (profileName === "explorador") {
+    return "lowticket";
+  }
+
+  if (profileName === "buscador" || profileName === "sonhador") {
+    return isUpTo5k ? "lowticket" : "gravado";
+  }
+
+  if (profileName === "navegante") {
+    if (isUpTo2k) return "lowticket";
+    if (incomeAnswer === "b") return "gravado";
+    return "mentoria";
+  }
+
+  return "lowticket";
+}
+
+function resolveCta(profileName: string, incomeAnswer?: string) {
+  const offer = resolveOffer(profileName, incomeAnswer);
+
+  if (offer === "lowticket") {
+    return {
+      label: "Quero sair do aperto agora",
+      href: "https://sistema.protocolodaconsistencia.com.br/",
+      openInNewTab: true,
+    };
+  }
+
+  if (offer === "gravado") {
+    return {
+      label: "Quero colocar minha vida financeira em ordem",
+      href: "https://pay.kiwify.com.br/bndI7ab",
+      openInNewTab: true,
+    };
+  }
+
+  return {
+    label: "Quero acelerar com acompanhamento",
+    href: "https://forms.gle/fPgxpuvtdhkZ6dQM8",
+    openInNewTab: true,
+  };
+}
+
+function resolveCtaMessage(profileName: string, incomeAnswer?: string): CtaMessage {
+  const offer = resolveOffer(profileName, incomeAnswer);
+
+  if (offer === "lowticket") {
+    if (profileName === "explorador") {
+      return {
+        title: "Você não precisa continuar vivendo no modo sobrevivência.",
+        paragraphs: [
+          "A pressão das dívidas cansa, trava e rouba sua paz dentro de casa.",
+          "Aqui você segue um plano simples para parar o sangramento, ganhar fôlego e voltar a dormir com a cabeça mais leve.",
+          "Sem promessa vazia. Passo a passo claro para sair do caos."
+        ],
+      };
+    }
+
+    if (profileName === "navegante") {
+      return {
+        title: "Você já está no caminho certo — agora é hora de fortalecer sua base.",
+        paragraphs: [
+          "Com organização e decisões certas agora, você evita cair em ciclos de aperto mais pra frente.",
+          "Esse próximo passo é leve no bolso e forte em resultado: método simples para manter constância todo mês.",
+          "Você continua no controle, com mais segurança e menos ansiedade."
+        ],
+      };
+    }
+
+    return {
+      title: "Você não precisa fazer isso sozinho(a) e no improviso.",
+      paragraphs: [
+        "Se todo mês parece uma corrida para fechar as contas, o problema não é falta de esforço.",
+        "É falta de um sistema simples que te diga exatamente o que fazer com seu dinheiro.",
+        "Aqui você começa com clareza, organização e alívio — sem pesar no orçamento."
+      ],
+    };
+  }
+
+  if (offer === "gravado") {
+    if (profileName === "navegante") {
+      return {
+        title: "Seu próximo nível financeiro pede método, não mais tentativa e erro.",
+        paragraphs: [
+          "Você já tem disciplina. O que falta é um mapa prático para decidir melhor e crescer com consistência.",
+          "No gravado, você aprende no seu ritmo e aplica no mundo real, sem depender de planilhas confusas.",
+          "Mais clareza para decidir. Mais segurança para avançar."
+        ],
+      };
+    }
+
+    return {
+      title: "Você trabalha duro demais para continuar no zero a zero.",
+      paragraphs: [
+        "Quando o dinheiro entra e some, vem aquela sensação de cansaço e frustração silenciosa.",
+        "Com o método certo, você passa a enxergar para onde o dinheiro vai e como fazer ele sobrar de verdade.",
+        "Sem complicação. Sem culpa. Com direção prática para sua rotina."
+      ],
+    };
+  }
+
+  return {
+    title: "Você já tem base. Agora é hora de acelerar com estratégia.",
+    paragraphs: [
+      "Seu momento não é mais de apagar incêndio, é de construir crescimento com decisões mais inteligentes.",
+      "Na mentoria em grupo, você encurta caminho com acompanhamento, estrutura e foco no que realmente traz resultado.",
+      "Menos dúvida. Mais execução. Mais avanço financeiro."
+    ],
+  };
 }
 
 export function calculateProfile(responses: Record<string, string>): ProfileResult {
   let totalScore = 0;
-  
+  const incomeAnswer = responses.income;
+
   Object.entries(responses).forEach(([questionId, answer]) => {
     if (scoreMatrix[questionId] && scoreMatrix[questionId][answer]) {
       totalScore += scoreMatrix[questionId][answer];
@@ -121,6 +252,8 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
         "Automatize Seus Investimentos: Configure uma transferência automática para sua corretora no mesmo dia que seu salário cair. Assim, você investe sem nem perceber.",
         "Diversifique um Degrau: Pesquise UM novo tipo de investimento (ex: Tesouro IPCA, FIIs) para dar o próximo passo na sua jornada de investidor."
       ],
+      cta: resolveCta("navegante", incomeAnswer),
+      ctaMessage: resolveCtaMessage("navegante", incomeAnswer),
     };
   } else if (totalScore <= 14) {
     return {
@@ -133,6 +266,8 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
         "Crie um \"Pote dos Sonhos\": Separe uma quantia simbólica (mesmo que R$ 50) todo mês em uma conta/carteira separada, dedicada EXCLUSIVAMENTE ao seu objetivo principal.",
         "Revise Assinaturas: Cancele pelo menos UMA assinatura ou serviço recorrente que você não usa tanto assim. Redirecione esse valor para o seu \"Pote dos Sonhos\"."
       ],
+      cta: resolveCta("sonhador", incomeAnswer),
+      ctaMessage: resolveCtaMessage("sonhador", incomeAnswer),
     };
   } else if (totalScore <= 19) {
     return {
@@ -145,6 +280,8 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
         "Respire e Anote: Por uma semana, apenas ANOTE todos os seus gastos, sem julgamento. O simples ato de registrar tira o peso da mente e traz clareza.",
         "A Regra do \"1 Não\": Comprometa-se a recusar UM gasto impulsivo por semana (aquele cafezinho, a compra por impulso). Celebre essa pequena vitória."
       ],
+      cta: resolveCta("buscador", incomeAnswer),
+      ctaMessage: resolveCtaMessage("buscador", incomeAnswer),
     };
   } else {
     return {
@@ -157,6 +294,8 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
         "Faça um Raio-X das Dívidas: Liste TODAS as suas dívidas, com valor, taxa de juros e credor. Só enxergando o monstro de frente você pode combatê-lo.",
         "Pare o Sangramento Imediato: Identifique UM gasto recorrente não essencial que pode ser cortado ou reduzido para liberar dinheiro para abater as dívidas mais caras."
       ],
+      cta: resolveCta("explorador", incomeAnswer),
+      ctaMessage: resolveCtaMessage("explorador", incomeAnswer),
     };
   }
 }
