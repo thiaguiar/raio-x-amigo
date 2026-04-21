@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 type Screen = "welcome" | "data-capture" | "questions" | "result";
 const COURSE_URL = "https://pay.kiwify.com.br/bndI7ab";
+const API_BASE_URL = (import.meta.env.VITE_API_URL || "https://raio-x-amigo-production.up.railway.app").replace(/\/$/, "");
 
 interface UserData {
   name?: string;
@@ -37,7 +38,7 @@ const Index = () => {
     setAccessError(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || ""}/access/verify`, {
+      const response = await fetch(`${API_BASE_URL}/access/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

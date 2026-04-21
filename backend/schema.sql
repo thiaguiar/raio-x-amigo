@@ -11,3 +11,9 @@ CREATE TABLE IF NOT EXISTS course_access (
 );
 
 CREATE INDEX IF NOT EXISTS idx_course_access_email ON course_access (LOWER(email));
+
+CREATE TABLE IF NOT EXISTS emails_liberados (
+  email TEXT PRIMARY KEY
+);
+
+CREATE INDEX IF NOT EXISTS idx_emails_liberados_email ON emails_liberados (LOWER(email));
