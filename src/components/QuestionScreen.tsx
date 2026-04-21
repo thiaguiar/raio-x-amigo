@@ -32,35 +32,33 @@ const QuestionScreen = ({
   canGoBack,
 }: QuestionScreenProps) => {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <div className="max-w-3xl w-full animate-fade-in">
+    <div className="min-h-screen bg-background px-4 py-6 sm:px-6 sm:py-10">
+      <div className="mx-auto w-full max-w-3xl animate-fade-in">
         <ProgressBar current={questionNumber} total={totalQuestions} />
-        
-        <div className="bg-card rounded-2xl shadow-lg p-8 md:p-12 border border-border">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+
+        <div className="rounded-3xl border border-border bg-card p-5 shadow-lg sm:p-8 md:p-12">
+          <h2 className="mb-6 text-xl font-bold leading-snug text-foreground sm:mb-8 sm:text-2xl md:text-3xl">
             {question}
           </h2>
-          
-          <div className="space-y-4 mb-8">
+
+          <div className="mb-8 space-y-3 sm:space-y-4">
             {options.map((option) => (
               <button
                 key={option.value}
                 onClick={() => onSelect(option.value)}
-                className={`w-full text-left p-5 rounded-xl border-2 transition-all hover:scale-[1.02] ${
-                  selectedValue === option.value
+                className={`w-full rounded-2xl border-2 p-4 text-left transition-all hover:scale-[1.01] sm:p-5 ${selectedValue === option.value
                     ? "border-primary bg-primary/5 shadow-md"
                     : "border-border hover:border-primary/50"
-                }`}
+                  }`}
               >
-                <div className="flex items-center gap-4">
-                  <span className="text-3xl">{option.emoji}</span>
-                  <span className="text-lg flex-1">{option.label}</span>
+                <div className="flex items-start gap-3 sm:items-center sm:gap-4">
+                  <span className="pt-0.5 text-2xl sm:text-3xl">{option.emoji}</span>
+                  <span className="flex-1 text-base leading-relaxed sm:text-lg">{option.label}</span>
                   <div
-                    className={`w-6 h-6 rounded-full border-2 transition-all ${
-                      selectedValue === option.value
+                    className={`mt-0.5 h-5 w-5 flex-shrink-0 rounded-full border-2 transition-all sm:mt-0 sm:h-6 sm:w-6 ${selectedValue === option.value
                         ? "border-primary bg-primary"
                         : "border-muted-foreground"
-                    }`}
+                      }`}
                   >
                     {selectedValue === option.value && (
                       <div className="w-full h-full rounded-full bg-white scale-50" />
@@ -70,14 +68,14 @@ const QuestionScreen = ({
               </button>
             ))}
           </div>
-          
-          <div className="flex gap-4">
+
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:gap-4">
             {canGoBack && (
               <Button
                 variant="outline"
                 size="lg"
                 onClick={onBack}
-                className="flex-1"
+                className="h-12 flex-1"
               >
                 <ArrowLeft className="mr-2 h-5 w-5" />
                 Voltar
@@ -87,7 +85,7 @@ const QuestionScreen = ({
               size="lg"
               onClick={onNext}
               disabled={!selectedValue}
-              className={`font-semibold ${canGoBack ? 'flex-1' : 'w-full'}`}
+              className={`h-12 font-semibold ${canGoBack ? 'flex-1' : 'w-full'}`}
             >
               {questionNumber === totalQuestions ? "Ver Meu Resultado" : "Próxima"}
               <ArrowRight className="ml-2 h-5 w-5" />

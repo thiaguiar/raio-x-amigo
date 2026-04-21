@@ -39,14 +39,14 @@ const DataCaptureScreen = ({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <div className="max-w-2xl w-full animate-fade-in">
-        <div className="bg-card rounded-2xl shadow-lg p-8 md:p-12 border border-border">
-          <h2 className="text-3xl font-bold text-foreground mb-4">
+    <div className="min-h-screen bg-background px-4 py-6 sm:px-6 sm:py-10">
+      <div className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-2xl items-center animate-fade-in">
+        <div className="w-full rounded-3xl border border-border bg-card p-5 shadow-lg sm:p-8 md:p-12">
+          <h2 className="mb-4 text-2xl font-bold text-foreground sm:text-3xl">
             Validar Meu Acesso
           </h2>
 
-          <p className="text-lg text-muted-foreground mb-8">
+          <p className="mb-6 text-base leading-relaxed text-muted-foreground sm:mb-8 sm:text-lg">
             Esta ferramenta está disponível apenas para alunos com compra confirmada. Informe o e-mail usado na Kiwify para liberar o diagnóstico.
           </p>
 
@@ -59,7 +59,7 @@ const DataCaptureScreen = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
-                className="h-12 text-lg"
+                className="h-12 text-base sm:text-lg"
               />
             </div>
 
@@ -84,7 +84,7 @@ const DataCaptureScreen = ({
               type="submit"
               size="lg"
               disabled={isLoading}
-              className="w-full text-lg py-6 h-auto font-semibold"
+              className="h-auto w-full py-4 text-base font-semibold sm:py-6 sm:text-lg"
             >
               {isLoading ? "Validando acesso..." : "Validar e continuar"}
               <ArrowRight className="ml-2 h-5 w-5" />
