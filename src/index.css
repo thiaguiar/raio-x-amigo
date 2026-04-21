@@ -108,6 +108,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
+    overflow-x: hidden;
   }
 
   html {
@@ -117,5 +118,12 @@ All colors MUST be HSL.
   body,
   #root {
     min-width: 320px;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
   }
 }

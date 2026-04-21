@@ -9,14 +9,12 @@ interface ResultScreenProps {
   onRestart?: () => void;
 }
 
+const EXCLUSIVE_AGENT_URL = "https://chatgpt.com/g/g-69e7c90749948191a28af636a446713d-th-ia-go-mentor-financeiro";
+const EXCLUSIVE_AGENT_PASSWORD = "agir";
+
 const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
   const handleProfileCta = () => {
-    if (profile.cta.openInNewTab) {
-      window.open(profile.cta.href, "_blank", "noopener,noreferrer");
-      return;
-    }
-
-    window.location.href = profile.cta.href;
+    window.open(EXCLUSIVE_AGENT_URL, "_blank", "noopener,noreferrer");
   };
 
   const handleCopyPrompt = async () => {
@@ -32,7 +30,7 @@ const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
   const greeting = userName ? `Olá, ${userName}!` : "Seu diagnóstico está pronto.";
 
   return (
-    <div className="min-h-screen bg-background px-4 py-6 sm:px-6 sm:py-10">
+    <div className="min-h-screen overflow-x-hidden bg-background px-3 py-4 sm:px-6 sm:py-10">
       <div className="relative mx-auto max-w-5xl animate-fade-in">
         <div className="mb-8 flex justify-start sm:absolute sm:left-0 sm:top-0 sm:mb-0">
           <Button
@@ -47,12 +45,12 @@ const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
           </Button>
         </div>
 
-        <div className="mb-10 pt-0 text-center sm:mb-12 sm:pt-10">
-          <div className="mb-4 text-5xl sm:text-6xl md:text-7xl">{profile.emoji}</div>
-          <h1 className="mb-4 text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
+        <div className="mb-8 pt-0 text-center sm:mb-12 sm:pt-10">
+          <div className="mb-4 text-4xl sm:text-6xl md:text-7xl">{profile.emoji}</div>
+          <h1 className="mb-4 text-[1.9rem] font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
             SEU RAIO-X FINANCEIRO ESTÁ PRONTO! 🎉
           </h1>
-          <p className="text-lg text-muted-foreground sm:text-xl">{greeting}</p>
+          <p className="text-base text-muted-foreground sm:text-xl">{greeting}</p>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
             Confira abaixo seu diagnóstico, o ponto de travamento e o próximo movimento prático.
           </p>
@@ -143,7 +141,7 @@ const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
               </Button>
             </div>
 
-            <div className="rounded-3xl border border-border bg-card p-5 shadow-lg sm:p-8">
+            <div className="rounded-3xl border border-border bg-card p-4 shadow-lg sm:p-8">
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary/80 mb-3">
                 Próximo passo
               </p>
@@ -152,11 +150,26 @@ const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-6">{profile.nextStep}</p>
 
-              <div className="mb-6 rounded-2xl border border-border bg-muted/50 p-4 sm:p-5">
+              <div className="mb-4 rounded-2xl border border-border bg-muted/50 p-4 sm:p-5">
                 <p className="text-sm font-medium text-muted-foreground mb-2">Direcionamento</p>
                 <p className="text-foreground leading-relaxed">
                   O objetivo agora não é consumir mais informação solta. É aplicar um método que faça sentido para o seu momento financeiro atual.
                 </p>
+              </div>
+
+              <div className="mb-5 rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left">
+                <p className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-primary/80">
+                  Acesso ao agente exclusivo
+                </p>
+                <p className="text-sm leading-relaxed text-foreground sm:text-base">
+                  Como voce ja faz parte do curso, pode seguir direto para o agente de IA que avalia seu resultado e monta o plano de acao.
+                </p>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  Senha de acesso:
+                </p>
+                <div className="mt-2 rounded-xl bg-background px-4 py-3 text-lg font-bold tracking-[0.22em] text-primary">
+                  {EXCLUSIVE_AGENT_PASSWORD}
+                </div>
               </div>
 
               <div className="text-center">
@@ -165,10 +178,10 @@ const ResultScreen = ({ profile, userName, onRestart }: ResultScreenProps) => {
                   className="mb-3 h-auto w-full rounded-xl bg-yellow-500 px-6 py-4 text-base font-bold text-black shadow-lg transition-all hover:scale-[1.01] hover:bg-yellow-400 sm:text-lg"
                   onClick={handleProfileCta}
                 >
-                  {profile.cta.label}
+                  Abrir meu agente de IA exclusivo
                 </Button>
                 <p className="text-sm text-muted-foreground">
-                  Ferramenta prática para sair da análise e entrar em execução.
+                  Use a senha acima ao entrar e continue seu plano de acao no agente.
                 </p>
               </div>
             </div>
