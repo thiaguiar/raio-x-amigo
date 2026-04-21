@@ -50,16 +50,18 @@ function extractBuyerData(payload) {
 async function findAccessByEmail(email) {
   try {
     const accessResult = await pool.query(
-      `SELECT email, name, purchase_status, source, unlocked_at
-       FROM course_access
+      `SELECT email
+       FROM emails_liberados
        WHERE LOWER(email) = LOWER($1)
-         AND purchase_status = 'paid'
        LIMIT 1`,
       [email]
     );
 
     if (accessResult.rowCount > 0) {
-      return accessResult.rows[0];
+      return {
+        email: accessResult.rows[0].email,
+        name: null,
+      };
     }
   } catch (error) {
     if (!isMissingRelation(error)) {
@@ -108,7 +110,7 @@ app.post('/access/verify', async (req, res) => {
     if (!access) {
       return res.status(403).json({
         hasAccess: false,
-        error: 'Não encontramos uma compra confirmada com este e-mail.',
+        error: 'Não encontramos este e-mail na tabela emails_liberados nem entre leads com compra confirmada.',
       });
     }
 
@@ -146,18 +148,12 @@ app.post('/webhook/paid', async (req, res) => {
 
   try {
     const result = await pool.query(
-      `INSERT INTO course_access (email, name, purchase_status, source, kiwify_transaction_id, unlocked_at, updated_at)
-       VALUES ($1, $2, 'paid', 'kiwify', $3, NOW(), NOW())
+      `INSERT INTO emails_liberados (email)
+       VALUES ($1)
        ON CONFLICT (email)
-       DO UPDATE SET
-         name = COALESCE(EXCLUDED.name, course_access.name),
-         purchase_status = 'paid',
-         source = 'kiwify',
-         kiwify_transaction_id = COALESCE(EXCLUDED.kiwify_transaction_id, course_access.kiwify_transaction_id),
-         unlocked_at = COALESCE(course_access.unlocked_at, NOW()),
-         updated_at = NOW()
-       RETURNING *`,
-      [email, buyer.name || null, buyer.transactionId || null]
+       DO UPDATE SET email = EXCLUDED.email
+       RETURNING email`,
+      [email]
     );
 
     res.json(result.rows[0]);
@@ -165,7 +161,7 @@ app.post('/webhook/paid', async (req, res) => {
     console.error(error);
     if (isMissingRelation(error)) {
       return res.status(500).json({
-        error: 'A tabela course_access ainda não existe. Rode a migração do schema antes de usar o webhook.',
+        error: 'A tabela emails_liberados ainda não existe. Rode a migração do schema antes de usar o webhook.',
       });
     }
 
