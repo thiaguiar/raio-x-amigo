@@ -97,143 +97,140 @@ export interface ProfileResult {
   emoji: string;
   title: string;
   diagnosis: string;
+  mainIssue: string;
+  hardTruth: string;
   score: string;
-  nextSteps: string[];
+  actionPlan: string[];
+  aiPrompt: string;
+  nextStep: string;
   cta: {
     label: string;
     href: string;
     openInNewTab?: boolean;
   };
-  ctaMessage: {
-    title: string;
-    paragraphs: string[];
-  };
 }
 
-type OfferType = "lowticket" | "gravado" | "mentoria";
-type CtaMessage = {
-  title: string;
-  paragraphs: string[];
+const courseCta = {
+  label: "Quero ter controle total do meu dinheiro",
+  href: "https://pay.kiwify.com.br/bndI7ab",
+  openInNewTab: true,
 };
 
-function resolveOffer(profileName: string, incomeAnswer?: string): OfferType {
-  const isUpTo2k = incomeAnswer === "a";
-  const isUpTo5k = incomeAnswer === "a" || incomeAnswer === "b";
+type ProfileConfig = Omit<ProfileResult, "score"> & {
+  minScore: number;
+  maxScore: number;
+  scoreLabel: string;
+};
 
-  if (profileName === "explorador") {
-    return "lowticket";
-  }
-
-  if (profileName === "buscador" || profileName === "sonhador") {
-    return isUpTo5k ? "lowticket" : "gravado";
-  }
-
-  if (profileName === "navegante") {
-    if (isUpTo2k) return "lowticket";
-    if (incomeAnswer === "b") return "gravado";
-    return "mentoria";
-  }
-
-  return "lowticket";
-}
-
-function resolveCta(profileName: string, incomeAnswer?: string) {
-  const offer = resolveOffer(profileName, incomeAnswer);
-
-  if (offer === "lowticket") {
-    return {
-      label: "Quero sair do aperto agora",
-      href: "https://sistema.protocolodaconsistencia.com.br/",
-      openInNewTab: true,
-    };
-  }
-
-  if (offer === "gravado") {
-    return {
-      label: "Quero colocar minha vida financeira em ordem",
-      href: "https://pay.kiwify.com.br/bndI7ab",
-      openInNewTab: true,
-    };
-  }
-
-  return {
-    label: "Quero acelerar com acompanhamento",
-    href: "https://forms.gle/fPgxpuvtdhkZ6dQM8",
-    openInNewTab: true,
-  };
-}
-
-function resolveCtaMessage(profileName: string, incomeAnswer?: string): CtaMessage {
-  const offer = resolveOffer(profileName, incomeAnswer);
-
-  if (offer === "lowticket") {
-    if (profileName === "explorador") {
-      return {
-        title: "Você não precisa continuar vivendo no modo sobrevivência.",
-        paragraphs: [
-          "A pressão das dívidas cansa, trava e rouba sua paz dentro de casa.",
-          "Aqui você segue um plano simples para parar o sangramento, ganhar fôlego e voltar a dormir com a cabeça mais leve.",
-          "Sem promessa vazia. Passo a passo claro para sair do caos."
-        ],
-      };
-    }
-
-    if (profileName === "navegante") {
-      return {
-        title: "Você já está no caminho certo — agora é hora de fortalecer sua base.",
-        paragraphs: [
-          "Com organização e decisões certas agora, você evita cair em ciclos de aperto mais pra frente.",
-          "Esse próximo passo é leve no bolso e forte em resultado: método simples para manter constância todo mês.",
-          "Você continua no controle, com mais segurança e menos ansiedade."
-        ],
-      };
-    }
-
-    return {
-      title: "Você não precisa fazer isso sozinho(a) e no improviso.",
-      paragraphs: [
-        "Se todo mês parece uma corrida para fechar as contas, o problema não é falta de esforço.",
-        "É falta de um sistema simples que te diga exatamente o que fazer com seu dinheiro.",
-        "Aqui você começa com clareza, organização e alívio — sem pesar no orçamento."
-      ],
-    };
-  }
-
-  if (offer === "gravado") {
-    if (profileName === "navegante") {
-      return {
-        title: "Seu próximo nível financeiro pede método, não mais tentativa e erro.",
-        paragraphs: [
-          "Você já tem disciplina. O que falta é um mapa prático para decidir melhor e crescer com consistência.",
-          "No gravado, você aprende no seu ritmo e aplica no mundo real, sem depender de planilhas confusas.",
-          "Mais clareza para decidir. Mais segurança para avançar."
-        ],
-      };
-    }
-
-    return {
-      title: "Você trabalha duro demais para continuar no zero a zero.",
-      paragraphs: [
-        "Quando o dinheiro entra e some, vem aquela sensação de cansaço e frustração silenciosa.",
-        "Com o método certo, você passa a enxergar para onde o dinheiro vai e como fazer ele sobrar de verdade.",
-        "Sem complicação. Sem culpa. Com direção prática para sua rotina."
-      ],
-    };
-  }
-
-  return {
-    title: "Você já tem base. Agora é hora de acelerar com estratégia.",
-    paragraphs: [
-      "Seu momento não é mais de apagar incêndio, é de construir crescimento com decisões mais inteligentes.",
-      "Na mentoria em grupo, você encurta caminho com acompanhamento, estrutura e foco no que realmente traz resultado.",
-      "Menos dúvida. Mais execução. Mais avanço financeiro."
+const profileConfigs: ProfileConfig[] = [
+  {
+    minScore: 6,
+    maxScore: 9,
+    scoreLabel: "Nível 5 de 5",
+    name: "navegante-em-evolucao",
+    emoji: "🧭",
+    title: "Navegante em Evolução",
+    diagnosis: "Você já está no caminho certo. Existe controle, consciência e início de crescimento.",
+    mainIssue: "Você pode estar confortável demais e deixando oportunidades maiores passarem.",
+    hardTruth: "Sem estratégia clara de expansão, você cresce mais devagar do que poderia.",
+    actionPlan: [
+      "Revise seus investimentos atuais.",
+      "Identifique uma forma de diversificar.",
+      "Defina uma meta de crescimento financeira."
     ],
-  };
-}
+    aiPrompt: "Eu fiz um diagnóstico financeiro e estou no nível NAVEGANTE EM EVOLUÇÃO. Já tenho controle e estou evoluindo, mas quero acelerar meu crescimento financeiro. Me dê um plano simples e estratégico para as próximas 24 horas e 48 horas para evoluir mais rápido e aproveitar melhor meu dinheiro.",
+    nextStep: "Você precisa acelerar sua evolução com estratégia.",
+    cta: courseCta,
+  },
+  {
+    minScore: 10,
+    maxScore: 13,
+    scoreLabel: "Nível 4 de 5",
+    name: "organizado-sem-crescimento",
+    emoji: "📊",
+    title: "Organizado sem Crescimento",
+    diagnosis: "Você tem controle financeiro, mas sente que não está avançando como poderia.",
+    mainIssue: "Você está organizando bem, mas não está fazendo seu dinheiro trabalhar para você.",
+    hardTruth: "Organização sem estratégia de crescimento limita seu potencial financeiro.",
+    actionPlan: [
+      "Identifique quanto você consegue investir mensalmente.",
+      "Escolha um primeiro tipo de investimento simples.",
+      "Defina um valor automático para começar."
+    ],
+    aiPrompt: "Eu fiz um diagnóstico financeiro e estou no nível ORGANIZADO SEM CRESCIMENTO. Eu tenho controle das minhas finanças, mas não estou evoluindo como poderia. Me dê um plano simples e prático para as próximas 24 horas e 48 horas para começar a fazer meu dinheiro crescer. Foque em ações fáceis de executar.",
+    nextStep: "Você precisa transformar controle em crescimento consistente.",
+    cta: courseCta,
+  },
+  {
+    minScore: 14,
+    maxScore: 17,
+    scoreLabel: "Nível 3 de 5",
+    name: "equilibrista",
+    emoji: "⚖️",
+    title: "Equilibrista (Empatando)",
+    diagnosis: "Você paga suas contas, mas não constrói nada. Sua vida financeira está estável, mas estagnada.",
+    mainIssue: "Você não está direcionando seu dinheiro, está apenas deixando ele passar por você.",
+    hardTruth: "Sem um plano claro, você pode passar anos trabalhando sem sair do lugar.",
+    actionPlan: [
+      "Defina um valor fixo para guardar, mesmo que pequeno.",
+      "Separe esse valor antes de pagar qualquer coisa.",
+      "Crie uma conta separada para esse dinheiro."
+    ],
+    aiPrompt: "Eu fiz um diagnóstico financeiro e estou no nível EQUILIBRISTA (empatando). Eu consigo pagar contas, mas não consigo evoluir financeiramente. Me dê um plano simples e prático para as próximas 24 horas e 48 horas para começar a sair da estagnação e construir progresso financeiro. Priorize ações pequenas e consistentes.",
+    nextStep: "Você precisa estruturar um sistema que transforme esforço em progresso.",
+    cta: {
+      ...courseCta,
+      label: "Quero sair do meu nível atual e organizar minha vida financeira",
+    },
+  },
+  {
+    minScore: 18,
+    maxScore: 21,
+    scoreLabel: "Nível 2 de 5",
+    name: "endividado-sob-pressao",
+    emoji: "📉",
+    title: "Endividado sob Pressão",
+    diagnosis: "As dívidas estão ocupando espaço na sua mente e no seu bolso. Existe esforço, mas falta direção clara.",
+    mainIssue: "Você está tentando resolver tudo ao mesmo tempo, sem estratégia.",
+    hardTruth: "Sem priorização, você continuará pagando e não saindo do lugar.",
+    actionPlan: [
+      "Liste todas as dívidas com valor e juros.",
+      "Identifique a dívida mais crítica.",
+      "Direcione todo esforço inicial para ela."
+    ],
+    aiPrompt: "Eu fiz um diagnóstico financeiro e estou no nível ENDIVIDADO SOB PRESSÃO. Tenho dívidas e estou tentando resolver, mas sem estratégia clara. Me dê um plano objetivo para as próximas 24 horas e 48 horas para começar a sair das dívidas com organização e prioridade. Foque em ações simples e de alto impacto.",
+    nextStep: "Você precisa de um plano estruturado para sair das dívidas com clareza.",
+    cta: {
+      ...courseCta,
+      label: "Quero um plano completo para melhorar minha situação",
+    },
+  },
+  {
+    minScore: 22,
+    maxScore: 29,
+    scoreLabel: "Nível 1 de 5",
+    name: "sobrevivente-financeiro",
+    emoji: "🚨",
+    title: "Sobrevivente Financeiro",
+    diagnosis: "Você está no modo sobrevivência. Seu dinheiro entra e sai sem controle real, e no fundo você sente que está sempre correndo atrás do prejuízo.",
+    mainIssue: "Você não tem um sistema financeiro, você está apenas reagindo às contas.",
+    hardTruth: "Enquanto você não assumir controle total do seu fluxo financeiro, qualquer aumento de renda vai continuar sumindo.",
+    actionPlan: [
+      "Liste todos os seus gastos dos últimos 7 dias.",
+      "Identifique um gasto que pode ser cortado imediatamente.",
+      "Defina um limite de gasto semanal."
+    ],
+    aiPrompt: "Eu fiz um diagnóstico financeiro e estou no nível SOBREVIVENTE FINANCEIRO. Minha situação atual é: sem controle claro, dinheiro entrando e saindo, sensação de aperto constante. Me dê um plano simples, direto e prático para as próximas 24 horas e 48 horas para sair do modo sobrevivência e começar a ter controle financeiro. Seja objetivo e priorize ações fáceis de executar.",
+    nextStep: "Você precisa de um método simples para sair do modo sobrevivência e construir controle.",
+    cta: {
+      ...courseCta,
+      label: "Quero um plano completo para melhorar minha situação",
+    },
+  },
+];
 
 export function calculateProfile(responses: Record<string, string>): ProfileResult {
   let totalScore = 0;
-  const incomeAnswer = responses.income;
 
   Object.entries(responses).forEach(([questionId, answer]) => {
     if (scoreMatrix[questionId] && scoreMatrix[questionId][answer]) {
@@ -241,61 +238,12 @@ export function calculateProfile(responses: Record<string, string>): ProfileResu
     }
   });
 
-  if (totalScore <= 9) {
-    return {
-      name: "navegante",
-      emoji: "⛵",
-      title: "Navegante Confiante",
-      diagnosis: "Parabéns! Você está no comando do seu barco e navegando em águas tranquilas. Sua consciência financeira é sua maior aliada. O desafio agora é transformar essa estabilidade em crescimento para alcançar seus objetivos mais ousados.",
-      score: `${totalScore}/29 (Zona Verde)`,
-      nextSteps: [
-        "Automatize Seus Investimentos: Configure uma transferência automática para sua corretora no mesmo dia que seu salário cair. Assim, você investe sem nem perceber.",
-        "Diversifique um Degrau: Pesquise UM novo tipo de investimento (ex: Tesouro IPCA, FIIs) para dar o próximo passo na sua jornada de investidor."
-      ],
-      cta: resolveCta("navegante", incomeAnswer),
-      ctaMessage: resolveCtaMessage("navegante", incomeAnswer),
-    };
-  } else if (totalScore <= 14) {
-    return {
-      name: "sonhador",
-      emoji: "🌱",
-      title: "Sonhador Organizado",
-      diagnosis: "Você tem consciência financeira e está dando passos importantes! Com um pouco mais de estrutura e organização, você pode transformar completamente sua relação com o dinheiro.",
-      score: `${totalScore}/29 (Zona Amarela-Verde)`,
-      nextSteps: [
-        "Crie um \"Pote dos Sonhos\": Separe uma quantia simbólica (mesmo que R$ 50) todo mês em uma conta/carteira separada, dedicada EXCLUSIVAMENTE ao seu objetivo principal.",
-        "Revise Assinaturas: Cancele pelo menos UMA assinatura ou serviço recorrente que você não usa tanto assim. Redirecione esse valor para o seu \"Pote dos Sonhos\"."
-      ],
-      cta: resolveCta("sonhador", incomeAnswer),
-      ctaMessage: resolveCtaMessage("sonhador", incomeAnswer),
-    };
-  } else if (totalScore <= 19) {
-    return {
-      name: "buscador",
-      emoji: "🎯",
-      title: "Buscador de Alívio",
-      diagnosis: "Você está fazendo o melhor que pode com o que tem. Reconhecer que precisa de ajuda já é um passo gigante! Com as estratégias certas, você pode recuperar o controle e ter mais tranquilidade.",
-      score: `${totalScore}/29 (Zona Amarela)`,
-      nextSteps: [
-        "Respire e Anote: Por uma semana, apenas ANOTE todos os seus gastos, sem julgamento. O simples ato de registrar tira o peso da mente e traz clareza.",
-        "A Regra do \"1 Não\": Comprometa-se a recusar UM gasto impulsivo por semana (aquele cafezinho, a compra por impulso). Celebre essa pequena vitória."
-      ],
-      cta: resolveCta("buscador", incomeAnswer),
-      ctaMessage: resolveCtaMessage("buscador", incomeAnswer),
-    };
-  } else {
-    return {
-      name: "explorador",
-      emoji: "💪",
-      title: "Explorador Determinado",
-      diagnosis: "Você está passando por um terreno acidentado, mas sua determinação em sair das dívidas é clara e inspiradora! Reconhecer que precisa de uma mudança é o primeiro e mais corajoso passo. A boa notícia é que existe um caminho claro para sair dessa situação.",
-      score: `${totalScore}/29 (Alerta Vermelho)`,
-      nextSteps: [
-        "Faça um Raio-X das Dívidas: Liste TODAS as suas dívidas, com valor, taxa de juros e credor. Só enxergando o monstro de frente você pode combatê-lo.",
-        "Pare o Sangramento Imediato: Identifique UM gasto recorrente não essencial que pode ser cortado ou reduzido para liberar dinheiro para abater as dívidas mais caras."
-      ],
-      cta: resolveCta("explorador", incomeAnswer),
-      ctaMessage: resolveCtaMessage("explorador", incomeAnswer),
-    };
+  const matchedProfile = profileConfigs.find(
+    (profile) => totalScore >= profile.minScore && totalScore <= profile.maxScore
+  ) ?? profileConfigs[profileConfigs.length - 1];
+
+  return {
+    ...matchedProfile,
+    score: `${totalScore}/29 (${matchedProfile.scoreLabel})`,
   }
 }

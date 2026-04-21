@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import DataCaptureScreen from "@/components/DataCaptureScreen";
 import QuestionScreen from "@/components/QuestionScreen";
@@ -7,9 +7,10 @@ import { questions, calculateProfile, ProfileResult } from "@/data/questions";
 import { toast } from "sonner";
 
 type Screen = "welcome" | "data-capture" | "questions" | "result";
+const COURSE_URL = "https://pay.kiwify.com.br/bndI7ab";
 
 interface UserData {
-  name: string;
+  name?: string;
   email: string;
 }
 
@@ -19,56 +20,54 @@ const Index = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, string>>({});
   const [profile, setProfile] = useState<ProfileResult | null>(null);
-
-  // Load saved progress from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("financial-diagnosis");
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        // Se o quiz foi completado, não restaura o estado (deixa voltar ao welcome)
-        if (data.isCompleted) {
-          return;
-        }
-        if (data.userData) setUserData(data.userData);
-        if (data.responses) setResponses(data.responses);
-        if (data.currentQuestionIndex) setCurrentQuestionIndex(data.currentQuestionIndex);
-        if (data.currentScreen && data.currentScreen !== "result") setCurrentScreen(data.currentScreen);
-      } catch (e) {
-        console.error("Error loading saved data:", e);
-      }
-    }
-  }, []);
-
-  // Save progress to localStorage
-  useEffect(() => {
-    if (userData || Object.keys(responses).length > 0) {
-      localStorage.setItem(
-        "financial-diagnosis",
-        JSON.stringify({
-          userData,
-          responses,
-          currentQuestionIndex,
-          currentScreen,
-          isCompleted: currentScreen === "result",
-        })
-      );
-    }
-  }, [userData, responses, currentQuestionIndex, currentScreen]);
+  const [isAccessLoading, setIsAccessLoading] = useState(false);
+  const [accessError, setAccessError] = useState<string | null>(null);
 
   const handleStart = () => {
-    // Reset all state when starting a new quiz
     setCurrentScreen("data-capture");
     setUserData(null);
     setCurrentQuestionIndex(0);
     setResponses({});
     setProfile(null);
+    setAccessError(null);
   };
 
-  const handleDataCapture = (data: UserData) => {
-    setUserData(data);
-    setCurrentScreen("questions");
-    toast.success("Perfeito! Vamos às perguntas.");
+  const handleDataCapture = async ({ email }: { email: string }) => {
+    setIsAccessLoading(true);
+    setAccessError(null);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ""}/access/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data.hasAccess) {
+        const message = data?.error || "Não encontramos uma compra confirmada com este e-mail.";
+        setAccessError(message);
+        toast.error(message);
+        return;
+      }
+
+      setUserData({
+        email,
+        name: data.name || undefined,
+      });
+      setCurrentScreen("questions");
+      toast.success("Acesso liberado. Vamos ao diagnóstico.");
+    } catch (error) {
+      console.error("Erro ao validar acesso:", error);
+      const message = "Não foi possível validar seu acesso agora. Tente novamente em instantes.";
+      setAccessError(message);
+      toast.error(message);
+    } finally {
+      setIsAccessLoading(false);
+    }
   };
 
   const handleQuestionSelect = (value: string) => {
@@ -94,7 +93,6 @@ const Index = () => {
 
   const handleNext = () => {
     if (currentQuestionIndex === questions.length - 1) {
-      // Last question - calculate result
       const result = calculateProfile(responses);
       setProfile(result);
       setCurrentScreen("result");
@@ -116,61 +114,14 @@ const Index = () => {
     }
   };
 
-  const handlePurchase = () => {
-    toast.success("Redirecionando para a página de compra...");
-    // In production, redirect to payment page
-    window.open("https://exemplo.com/checkout", "_blank");
-  };
-
   const handleRestart = () => {
-    // Clear localStorage and reset all state
-    localStorage.removeItem("financial-diagnosis");
     setCurrentScreen("welcome");
     setUserData(null);
     setCurrentQuestionIndex(0);
     setResponses({});
     setProfile(null);
-  };
-
-  const handleSubmitQuiz = async () => {
-    if (!userData || !profile) {
-      console.error("Dados do usuário ou perfil ausentes.");
-      return;
-    }
-
-    // Mapeia a resposta de renda para o formato esperado pelo backend
-    const incomeMap: Record<string, string> = {
-      a: "Até R$ 2.000",
-      b: "R$ 2.000 - R$ 5.000",
-      c: "R$ 5.000 - R$ 10.000",
-      d: "Acima de R$ 10.000",
-    };
-
-    const payload = {
-      name: userData.name,
-      email: userData.email,
-      income: incomeMap[responses.income] || "Não informado",
-      respostas: responses,
-      perfil: profile,
-    };
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/quiz`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro ao enviar os dados para o backend.");
-      }
-
-      console.log("Dados enviados com sucesso para o backend.");
-    } catch (error) {
-      console.error("Erro ao enviar os dados:", error);
-    }
+    setAccessError(null);
+    setIsAccessLoading(false);
   };
 
   if (currentScreen === "welcome") {
@@ -181,7 +132,10 @@ const Index = () => {
     return (
       <DataCaptureScreen
         onNext={handleDataCapture}
-        initialData={userData || undefined}
+        initialEmail={userData?.email}
+        isLoading={isAccessLoading}
+        accessError={accessError}
+        courseUrl={COURSE_URL}
       />
     );
   }
@@ -204,7 +158,6 @@ const Index = () => {
   }
 
   if (currentScreen === "result" && profile && userData) {
-    handleSubmitQuiz(); // Envia os dados ao backend ao exibir a tela de resultado
     return (
       <ResultScreen
         profile={profile}

@@ -1,10 +1,13 @@
-CREATE TABLE leads (
+CREATE TABLE IF NOT EXISTS course_access (
   id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
-  income TEXT NOT NULL,
-  respostas JSON NOT NULL,
-  perfil JSON NOT NULL,
-  comprou BOOLEAN DEFAULT FALSE,
-  criado_em TIMESTAMP DEFAULT NOW()
+  name TEXT,
+  purchase_status TEXT NOT NULL DEFAULT 'paid',
+  source TEXT NOT NULL DEFAULT 'kiwify',
+  kiwify_transaction_id TEXT UNIQUE,
+  unlocked_at TIMESTAMP DEFAULT NOW(),
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_course_access_email ON course_access (LOWER(email));

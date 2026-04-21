@@ -6,28 +6,36 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface DataCaptureScreenProps {
-  onNext: (data: { name: string; email: string }) => void;
-  initialData?: { name: string; email: string };
+  onNext: (data: { email: string }) => void | Promise<void>;
+  initialEmail?: string;
+  isLoading?: boolean;
+  accessError?: string | null;
+  courseUrl?: string;
 }
 
-const DataCaptureScreen = ({ onNext, initialData }: DataCaptureScreenProps) => {
-  const [name, setName] = useState(initialData?.name || "");
-  const [email, setEmail] = useState(initialData?.email || "");
+const DataCaptureScreen = ({
+  onNext,
+  initialEmail,
+  isLoading = false,
+  accessError,
+  courseUrl,
+}: DataCaptureScreenProps) => {
+  const [email, setEmail] = useState(initialEmail || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!name.trim() || !email.trim()) {
-      toast.error("Por favor, preencha todos os campos");
+
+    if (!email.trim()) {
+      toast.error("Por favor, informe o e-mail da compra.");
       return;
     }
 
     if (!email.includes("@")) {
-      toast.error("Por favor, insira um e-mail válido");
+      toast.error("Por favor, insira um e-mail válido.");
       return;
     }
 
-    onNext({ name, email });
+    void onNext({ email: email.trim() });
   };
 
   return (
@@ -35,26 +43,14 @@ const DataCaptureScreen = ({ onNext, initialData }: DataCaptureScreenProps) => {
       <div className="max-w-2xl w-full animate-fade-in">
         <div className="bg-card rounded-2xl shadow-lg p-8 md:p-12 border border-border">
           <h2 className="text-3xl font-bold text-foreground mb-4">
-            Antes de Começar...
+            Validar Meu Acesso
           </h2>
-          
+
           <p className="text-lg text-muted-foreground mb-8">
-            Vamos criar seu perfil personalizado! Precisamos de apenas 2 informações:
+            Esta ferramenta está disponível apenas para alunos com compra confirmada. Informe o e-mail usado na Kiwify para liberar o diagnóstico.
           </p>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-base">Nome completo</Label>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Seu nome"
-                className="h-12 text-lg"
-              />
-            </div>
-            
             <div className="space-y-2">
               <Label htmlFor="email" className="text-base">E-mail</Label>
               <Input
@@ -66,13 +62,31 @@ const DataCaptureScreen = ({ onNext, initialData }: DataCaptureScreenProps) => {
                 className="h-12 text-lg"
               />
             </div>
-            
+
+            {accessError && (
+              <div className="rounded-xl border border-destructive/25 bg-destructive/5 p-4 text-sm text-destructive">
+                {accessError}
+              </div>
+            )}
+
+            {courseUrl && (
+              <div className="rounded-xl border border-border bg-muted/50 p-4 text-sm text-muted-foreground">
+                Ainda não comprou ou usou outro e-mail? Use o botão abaixo para acessar a página do curso.
+                <div className="mt-3">
+                  <Button type="button" variant="outline" onClick={() => window.open(courseUrl, "_blank", "noopener,noreferrer")}>
+                    Ir para a página do curso
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <Button
               type="submit"
               size="lg"
+              disabled={isLoading}
               className="w-full text-lg py-6 h-auto font-semibold"
             >
-              Continuar para as Perguntas
+              {isLoading ? "Validando acesso..." : "Validar e continuar"}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </form>

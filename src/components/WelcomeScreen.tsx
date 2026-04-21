@@ -12,29 +12,29 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
         <div className="text-8xl mb-6">💙</div>
 
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Descubra Sua Saúde Financeira em 5 Minutos
+          Acesse Seu Raio-X Financeiro do Curso
         </h1>
 
         <p className="text-xl text-white/90 leading-relaxed">
-          Olá! Eu sou seu assistente para dar uma espiada nas suas finanças.
+          Uma leitura objetiva do seu momento financeiro, com direcionamento prático para aplicar junto com o seu curso.
         </p>
 
         <p className="text-2xl font-semibold text-white mb-6">
-          Vamos juntos criar seu <span className="bg-white/20 px-3 py-1 rounded-lg">Raio-X Financeiro</span> personalizado? É:
+          Este diagnóstico foi liberado para alunos com compra confirmada e entrega:
         </p>
 
         <div className="flex flex-col md:flex-row gap-4 justify-center items-center text-white text-lg">
           <div className="flex items-center gap-2">
             <span className="text-2xl">✓</span>
-            <span>Rápido (apenas 6 perguntas)</span>
+            <span>Diagnóstico em poucos minutos</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-2xl">✓</span>
-            <span>Gratuito</span>
+            <span>Plano de ação imediato</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-2xl">✓</span>
-            <span>100% Confidencial</span>
+            <span>Prompt pronto para usar com IA</span>
           </div>
         </div>
 
@@ -44,7 +44,7 @@ const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
             onClick={onStart}
             className="bg-white text-primary hover:bg-white/90 text-xl px-12 py-6 h-auto font-semibold shadow-2xl hover:scale-105 transition-transform"
           >
-            Começar Meu Raio-X
+            Validar Meu Acesso
             <ArrowRight className="ml-2 h-6 w-6" />
           </Button>
         </div>
